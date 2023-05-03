@@ -1,2 +1,4 @@
-package org.wruthless;public class DisplayQueryResults {
+package org.wruthless;
+
+public class DisplayQueryResults {
 }
