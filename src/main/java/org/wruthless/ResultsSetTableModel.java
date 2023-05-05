@@ -131,13 +131,14 @@ public class ResultsSetTableModel extends AbstractTableModel {
     }
 
 
+    // Receives query to perform.
     public void setQuery(String query) throws SQLException, IllegalStateException{
 
         if (!connectedToDatabase) {
             throw new IllegalStateException("[!] No database connection found.");
         }
 
-        // Specify query and execute.
+        // If connected to the database, specify query and execute.
         resultSet = statement.executeQuery(query);
 
         // Obtain meta data for ResultSet.
@@ -147,7 +148,24 @@ public class ResultsSetTableModel extends AbstractTableModel {
         resultSet.last();
         numberOfRows = resultSet.getRow();
 
-        // Tell JTable about any change to the model.
+        // Initiates an event that tells JTable to re-query the table model
+        // and extract the data and display it.
         fireTableStructureChanged();
+    }
+
+    // Close statement and connection
+    public void disconnectFromDatabase() {
+
+        if(connectedToDatabase) {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+               e.printStackTrace();
+            } finally {
+                connectedToDatabase = false;
+            }
+        }
     }
 }
